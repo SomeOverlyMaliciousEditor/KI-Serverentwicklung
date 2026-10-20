@@ -13,10 +13,10 @@ wheels/
 .env
 
 # Docker
-docker-compose.yml
+
 
 # UV lock file
-uv.lock
+
 
 # OS
 .DS_Store
