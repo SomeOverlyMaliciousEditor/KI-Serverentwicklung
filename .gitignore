@@ -8,3 +8,20 @@ wheels/
 
 # Virtual environments
 .venv
+
+# Environment variables
+.env
+
+# Docker
+docker-compose.yml
+
+# UV lock file
+uv.lock
+
+# OS
+.DS_Store
+# Agent/local folders
+.agent/
+.local/
+.pi/
+tmp/
