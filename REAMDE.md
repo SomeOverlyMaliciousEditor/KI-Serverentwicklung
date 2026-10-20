@@ -1,1 +1,0 @@
-# KI-gestützte Serverentwicklung -- Übung
