@@ -20,11 +20,11 @@ These are the tasks to complete **before** implementing the Appserver features.
 - [x] Model a **1:N relationship** (e.g. customer ↔ orders)
 - [x] Install / connect a **DB browser** (e.g. DBeaver, pgAdmin)
 
-## SKIP !!! 4. Keycloak (as Docker Container)
-- [ ] Run Keycloak as a Docker container — **caution with 26.8.0 as Hardened Image**
-- [ ] Create **1 realm**
-- [ ] Create **1 client** in that realm
-- [ ] Create at least **1 user** and **1 role**
+## 4. Keycloak (as Docker Container) — SKIPPED by decision
+- [x] ~~Run Keycloak as a Docker container — **caution with 26.8.0 as Hardened Image**~~ (skipped)
+- [x] ~~Create **1 realm**~~ (skipped)
+- [x] ~~Create **1 client** in that realm~~ (skipped)
+- [x] ~~Create at least **1 user** and **1 role**~~ (skipped)
 
 ## 5. Project Infrastructure
 - [ ] Create `pyproject.toml` including configuration for:
