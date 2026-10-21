@@ -15,10 +15,10 @@ These are the tasks to complete **before** implementing the Appserver features.
 - [x] Follow "Commit early, Commit often" — incremental development via prompts
 
 ## 3. Database (PostgreSQL as Docker Container)
-- [ ] Set up **PostgreSQL 18 or 19** as a Docker container
-- [ ] Model a **1:1 relationship** (e.g. user ↔ profile)
-- [ ] Model a **1:N relationship** (e.g. customer ↔ orders)
-- [ ] Install / connect a **DB browser** (e.g. DBeaver, pgAdmin)
+- [x] Set up **PostgreSQL 18 or 19** as a Docker container
+- [x] Model a **1:1 relationship** (e.g. user ↔ profile)
+- [x] Model a **1:N relationship** (e.g. customer ↔ orders)
+- [x] Install / connect a **DB browser** (e.g. DBeaver, pgAdmin)
 
 ## SKIP !!! 4. Keycloak (as Docker Container)
 - [ ] Run Keycloak as a Docker container — **caution with 26.8.0 as Hardened Image**
