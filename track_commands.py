@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 import json
-import sys
 import os
-from datetime import datetime
+import sys
 
 LOG = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".agent/cli_outcome.log", "records.jsonl")
 
@@ -14,14 +13,19 @@ def main():
 
 def list_recent(n=20):
     if not os.path.exists(LOG):
-        print("No log found. Run ki-serverdevelopment first.")
+        print("No log found. Run ki-serverentwicklung first.")
         return
     with open(LOG, "r", encoding="utf-8") as f:
         lines = f.readlines()[-n:]
     for line in lines:
-        rec = json.loads(line.strip())
-        print(f"[{rec['timestamp']}] {rec['flag']} {rec['argument']} "
-              f"success={rec['success']} exit={rec['exit_code']}")
+        try:
+            rec = json.loads(line.strip())
+        except json.JSONDecodeError:
+            continue
+        if not isinstance(rec, dict):
+            continue
+        print(f"[{rec.get('timestamp', '?')}] {rec.get('flag', '?')} {rec.get('argument')} "
+              f"success={rec.get('success', False)} exit={rec.get('exit_code', '?')}")
 
 def summarize():
     if not os.path.exists(LOG):

@@ -24,7 +24,7 @@ def load_skill(skill_id: str) -> str:
 
 def record_outcome(flag, argument, additional_args, success, exit_code, stdout=""):
     timestamp = datetime.now().isoformat()
-    log_path = Path(__file__).resolve().parent.parent.parent / "cli_outcome.log" / "records.jsonl"
+    log_path = Path(__file__).resolve().parent.parent.parent / ".agent" / "cli_outcome.log" / "records.jsonl"
     log_path.parent.mkdir(parents=True, exist_ok=True)
     record = {
         "timestamp": timestamp,
@@ -46,18 +46,31 @@ def main() -> None:
     additional_args = []
     while i < len(args):
         if args[i] == "--load-plan" and i + 1 < len(args):
-            print(load_plan(args[i + 1]))
+            name = args[i + 1]
             additional_args = args[i + 2:]
-            record_outcome("--load-plan", args[i + 1], additional_args, True, 0)
+            path = PLANS_DIR / name
+            if not path.is_file():
+                print(f"Plan not found: {path}")
+                record_outcome("--load-plan", name, additional_args, False, 1)
+                sys.exit(1)
+            print(path.read_text(encoding="utf-8"))
+            record_outcome("--load-plan", name, additional_args, True, 0)
             return
         if args[i] == "--load-skill" and i + 1 < len(args):
-            print(load_skill(args[i + 1]))
+            skill_id = args[i + 1]
             additional_args = args[i + 2:]
-            record_outcome("--load-skill", args[i + 1], additional_args, True, 0)
+            path = SKILLS_DIR / f"{skill_id}.md"
+            if not path.is_file():
+                print(f"Skill not found: {path}")
+                record_outcome("--load-skill", skill_id, additional_args, False, 1)
+                sys.exit(1)
+            print(path.read_text(encoding="utf-8"))
+            record_outcome("--load-skill", skill_id, additional_args, True, 0)
             return
         i += 1
     print("Hello from ki-serverdevelopment!")
-    record_outcome("unknown", None, args, True, 0)
+    record_outcome("unknown", None, args, False, 2)
+    sys.exit(2)
 
 
 if __name__ == "__main__":
