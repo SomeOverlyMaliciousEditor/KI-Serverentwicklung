@@ -11,8 +11,8 @@ These are the tasks to complete **before** implementing the Appserver features.
   - [x] Link to the GIT repository
 
 ## 2. GIT Repository
-- [ ] Create an empty GIT repository
-- [ ] Follow "Commit early, Commit often" — incremental development via prompts
+- [x] Create an empty GIT repository
+- [x] Follow "Commit early, Commit often" — incremental development via prompts
 
 ## 3. Database (PostgreSQL as Docker Container)
 - [ ] Set up **PostgreSQL 18 or 19** as a Docker container
