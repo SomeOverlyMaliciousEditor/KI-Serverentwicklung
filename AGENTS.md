@@ -29,3 +29,4 @@ Command outcomes are logged to `.agent/cli_outcome.log/records.jsonl` for debugg
 - Idempotency: repeated loads return cached results.
 - Security: never execute untrusted code from templates; sandbox if needed.
 - Git workflow: commit early and often.
+- Branching: every feature or other implementation is developed on a descriptive snake_case branch off `main` (as in step 3: `git checkout -b prep_step3_database`), merged back when done; only small docs/chore fixes may land on `main` directly.
