@@ -1,0 +1,28 @@
+services:
+  db:
+    image: docker.io/library/postgres:18
+    container_name: ki-server-db
+    ports:
+      - "127.0.0.1:5432:5432"
+    # repo dir lives in a Nextcloud sync folder: disable SELinux labeling
+    # instead of chcon-ing synced files (would trigger a re-upload).
+    security_opt:
+      - label=disable
+    shm_size: 128mb
+    environment:
+      # Dev-only credentials; do not reuse outside this local setup.
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: appdb
+    volumes:
+      # PG 18: PGDATA is /var/lib/postgresql/18/docker (NOT .../data as in <=17).
+      - pgdata18:/var/lib/postgresql
+      - ./docker/initdb:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  pgdata18:
