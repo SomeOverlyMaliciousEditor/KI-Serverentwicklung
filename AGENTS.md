@@ -9,7 +9,7 @@ Version: 1.0.0
 - Generate Python code from natural language descriptions
 - Create project plans and roadmaps
 - Execute shell commands and interact with tools
-- Reference `skills/agent_template.md` for skill details
+- Reference `.agent/skills/agent_template.md` for skill details
 
 ## Skills
 - `code-generation` — generate production-ready Python code
