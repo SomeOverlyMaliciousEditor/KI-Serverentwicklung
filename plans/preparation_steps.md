@@ -20,7 +20,7 @@ These are the tasks to complete **before** implementing the Appserver features.
 - [ ] Model a **1:N relationship** (e.g. customer ↔ orders)
 - [ ] Install / connect a **DB browser** (e.g. DBeaver, pgAdmin)
 
-## 4. Keycloak (as Docker Container)
+## SKIP !!! 4. Keycloak (as Docker Container)
 - [ ] Run Keycloak as a Docker container — **caution with 26.8.0 as Hardened Image**
 - [ ] Create **1 realm**
 - [ ] Create **1 client** in that realm
@@ -42,7 +42,7 @@ These are the tasks to complete **before** implementing the Appserver features.
 - [ ] POST-Request with Pydantic validation
 - [ ] PUT-Request with validation and lost-update prevention (e.g. ETag / versioning)
 - [ ] DB access via **SQLAlchemy**
-- [ ] Security via Dependency Injection
+- [ ] SKIP !!! Security via Dependency Injection
 
 ## 7. Testing (GET & POST)
 - [ ] Choose an approach: Bruno / Postman / Thunder Client **or** `pytest` (integration tests suffice)
