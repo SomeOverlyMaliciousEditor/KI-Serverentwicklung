@@ -24,7 +24,12 @@ def load_skill(skill_id: str) -> str:
 
 def record_outcome(flag, argument, additional_args, success, exit_code, stdout=""):
     timestamp = datetime.now().isoformat()
-    log_path = Path(__file__).resolve().parent.parent.parent / ".agent" / "cli_outcome.log" / "records.jsonl"
+    log_path = (
+        Path(__file__).resolve().parent.parent.parent
+        / ".agent"
+        / "cli_outcome.log"
+        / "records.jsonl"
+    )
     log_path.parent.mkdir(parents=True, exist_ok=True)
     record = {
         "timestamp": timestamp,
@@ -34,7 +39,7 @@ def record_outcome(flag, argument, additional_args, success, exit_code, stdout="
         "additional_args": additional_args,
         "success": success,
         "exit_code": exit_code,
-        "stdout": stdout
+        "stdout": stdout,
     }
     with open(log_path, "a", encoding="utf-8") as f:
         f.write(json.dumps(record, ensure_ascii=False) + "\n")
@@ -47,7 +52,7 @@ def main() -> None:
     while i < len(args):
         if args[i] == "--load-plan" and i + 1 < len(args):
             name = args[i + 1]
-            additional_args = args[i + 2:]
+            additional_args = args[i + 2 :]
             path = PLANS_DIR / name
             if not path.is_file():
                 print(f"Plan not found: {path}")
@@ -58,7 +63,7 @@ def main() -> None:
             return
         if args[i] == "--load-skill" and i + 1 < len(args):
             skill_id = args[i + 1]
-            additional_args = args[i + 2:]
+            additional_args = args[i + 2 :]
             path = SKILLS_DIR / f"{skill_id}.md"
             if not path.is_file():
                 print(f"Skill not found: {path}")

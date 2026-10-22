@@ -3,7 +3,12 @@ import json
 import os
 import sys
 
-LOG = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".agent/cli_outcome.log", "records.jsonl")
+LOG = os.path.join(
+    os.path.dirname(os.path.abspath(__file__)),
+    ".agent/cli_outcome.log",
+    "records.jsonl",
+)
+
 
 def main():
     if len(sys.argv) > 1 and sys.argv[1] == "--summary":
@@ -11,11 +16,12 @@ def main():
     else:
         list_recent()
 
+
 def list_recent(n=20):
     if not os.path.exists(LOG):
         print("No log found. Run ki-serverentwicklung first.")
         return
-    with open(LOG, "r", encoding="utf-8") as f:
+    with open(LOG, encoding="utf-8") as f:
         lines = f.readlines()[-n:]
     for line in lines:
         try:
@@ -24,15 +30,19 @@ def list_recent(n=20):
             continue
         if not isinstance(rec, dict):
             continue
-        print(f"[{rec.get('timestamp', '?')}] {rec.get('flag', '?')} {rec.get('argument')} "
-              f"success={rec.get('success', False)} exit={rec.get('exit_code', '?')}")
+        print(
+            f"[{rec.get('timestamp', '?')}] {rec.get('flag', '?')} "
+            f"{rec.get('argument')} success={rec.get('success', False)} "
+            f"exit={rec.get('exit_code', '?')}"
+        )
+
 
 def summarize():
     if not os.path.exists(LOG):
         print("No log found.")
         return
     flags = {}
-    with open(LOG, "r", encoding="utf-8") as f:
+    with open(LOG, encoding="utf-8") as f:
         for line in f:
             try:
                 rec = json.loads(line.strip())
@@ -48,7 +58,12 @@ def summarize():
                 flags[flag]["failure"] += 1
     print("=== Summary ===")
     for flag, counts in sorted(flags.items()):
-        print(f"{flag}: {counts['success']}/{counts['total']} success ({100*counts['success']/counts['total']:.1f}%), {counts['failure']} failure(s)")
+        percentage = 100 * counts["success"] / counts["total"]
+        print(
+            f"{flag}: {counts['success']}/{counts['total']} success "
+            f"({percentage:.1f}%), {counts['failure']} failure(s)"
+        )
+
 
 if __name__ == "__main__":
     main()

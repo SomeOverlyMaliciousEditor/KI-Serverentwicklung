@@ -8,6 +8,7 @@ docker/initdb/01_schema.sql (no SQLAlchemy / no external deps).
 
 Run with:  uv run --no-project python scripts/generate_erd.py
 """
+
 import shutil
 import subprocess
 import sys
@@ -72,9 +73,11 @@ def esc(text: str) -> str:
 def build_dot() -> str:
     lines = ["digraph app_schema {", "  rankdir=LR;", "  node [shape=plaintext];", ""]
     for name, (label, columns) in TABLES.items():
-        rows = [f"<TR><TD ALIGN=\"LEFT\">{esc(col)}</TD>"
-                f"<TD ALIGN=\"LEFT\">{esc(flag)}</TD></TR>"
-                for col, flag in columns]
+        rows = [
+            f'<TR><TD ALIGN="LEFT">{esc(col)}</TD>'
+            f'<TD ALIGN="LEFT">{esc(flag)}</TD></TR>'
+            for col, flag in columns
+        ]
         body = "".join(rows)
         lines.append(
             f'  {name} [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">'
@@ -82,7 +85,7 @@ def build_dot() -> str:
             f"{body}</TABLE>>];"
         )
     lines.append("")
-    for src, col, dst, label in EDGES:
+    for src, _col, dst, label in EDGES:
         lines.append(f'  {src} -> {dst} [label="{esc(label)}"];')
     lines.append("}")
     return "\n".join(lines) + "\n"
@@ -97,11 +100,17 @@ def main() -> int:
     dot_bin = shutil.which("dot")
     if not dot_bin:
         print("dot binary not found on PATH; skipped PNG render.")
-        print("To render manually:  dot -Tpng docs/erd/app_schema.dot "
-              "-o docs/erd/app_schema.png")
+        print(
+            "To render manually:  dot -Tpng docs/erd/app_schema.dot "
+            "-o docs/erd/app_schema.png"
+        )
         return 0
-    r = subprocess.run([dot_bin, "-Tpng", str(DOT_PATH), "-o", str(PNG_PATH)],
-                        capture_output=True, text=True, timeout=60)
+    r = subprocess.run(
+        [dot_bin, "-Tpng", str(DOT_PATH), "-o", str(PNG_PATH)],
+        capture_output=True,
+        text=True,
+        timeout=60,
+    )
     if r.returncode != 0:
         print(f"dot render failed: {r.stderr}", file=sys.stderr)
         return r.returncode
