@@ -19,7 +19,7 @@ Version: 1.0.0
 ## How to Use
 CLI Usage via the `ki-serverentwicklung` entry point:
 - Load a plan template: `ki-serverentwicklung --load-plan <name>` (e.g., `project_plan_template.md` from `plans/`)
-- Load a skill: `ki-serverentwicklung --load-skill <id>` (e.g., `code-generation` from `skills/`)
+- Load a skill: `ki-serverentwicklung --load-skill <id>` (e.g., `code-generation` from `.agent/skills/`)
 
 Command outcomes are logged to `.agent/cli_outcome.log/records.jsonl` for debugging and analysis. Use `python track_commands.py` to list recent entries or `python track_commands.py --summary` for per-flag success/failure counts.
 
