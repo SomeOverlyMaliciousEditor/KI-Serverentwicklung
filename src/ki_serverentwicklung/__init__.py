@@ -1,25 +1,47 @@
 import json
+import re
 import sys
 from datetime import datetime
+from functools import lru_cache
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 PLANS_DIR = BASE_DIR / "plans"
-SKILLS_DIR = BASE_DIR / "skills"
+SKILLS_DIR = BASE_DIR / ".agent" / "skills"
+_NAME_PATTERN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_.-]*$")
+
+
+def _validated_path(name: str, directory: Path, suffix: str) -> Path:
+    if not isinstance(name, str) or not _NAME_PATTERN.fullmatch(name):
+        raise ValueError(
+            "Name must contain only letters, numbers, dots, underscores, or hyphens"
+        )
+    if name in {".", ".."} or "/" in name or "\\" in name:
+        raise ValueError("Path separators and traversal components are not allowed")
+    root = directory.resolve()
+    path = (root / f"{name}{suffix}").resolve()
+    if path.parent != root:
+        raise ValueError("Resolved path is outside the allowed directory")
+    return path
+
+
+@lru_cache(maxsize=128)
+def _read_file(path: Path) -> str:
+    return path.read_text(encoding="utf-8")
 
 
 def load_plan(name: str) -> str:
-    path = PLANS_DIR / name
+    path = _validated_path(name, PLANS_DIR, "")
     if not path.is_file():
         return f"Plan not found: {path}"
-    return path.read_text(encoding="utf-8")
+    return _read_file(path)
 
 
 def load_skill(skill_id: str) -> str:
-    path = SKILLS_DIR / f"{skill_id}.md"
+    path = _validated_path(skill_id, SKILLS_DIR, ".md")
     if not path.is_file():
         return f"Skill not found: {path}"
-    return path.read_text(encoding="utf-8")
+    return _read_file(path)
 
 
 def record_outcome(flag, argument, additional_args, success, exit_code, stdout=""):
@@ -50,27 +72,26 @@ def main() -> None:
     i = 0
     additional_args = []
     while i < len(args):
-        if args[i] == "--load-plan" and i + 1 < len(args):
+        if args[i] in {"--load-plan", "--load-skill"}:
+            flag = args[i]
+            if i + 1 >= len(args) or not args[i + 1]:
+                print(f"{flag} requires a non-empty name")
+                record_outcome(flag, None, args[i + 1 :], False, 1)
+                sys.exit(1)
             name = args[i + 1]
             additional_args = args[i + 2 :]
-            path = PLANS_DIR / name
-            if not path.is_file():
-                print(f"Plan not found: {path}")
-                record_outcome("--load-plan", name, additional_args, False, 1)
+            try:
+                content = load_plan(name) if flag == "--load-plan" else load_skill(name)
+            except ValueError as error:
+                print(f"Invalid name: {error}")
+                record_outcome(flag, name, additional_args, False, 1)
                 sys.exit(1)
-            print(path.read_text(encoding="utf-8"))
-            record_outcome("--load-plan", name, additional_args, True, 0)
-            return
-        if args[i] == "--load-skill" and i + 1 < len(args):
-            skill_id = args[i + 1]
-            additional_args = args[i + 2 :]
-            path = SKILLS_DIR / f"{skill_id}.md"
-            if not path.is_file():
-                print(f"Skill not found: {path}")
-                record_outcome("--load-skill", skill_id, additional_args, False, 1)
+            if content.startswith(("Plan not found:", "Skill not found:")):
+                print(content)
+                record_outcome(flag, name, additional_args, False, 1)
                 sys.exit(1)
-            print(path.read_text(encoding="utf-8"))
-            record_outcome("--load-skill", skill_id, additional_args, True, 0)
+            print(content)
+            record_outcome(flag, name, additional_args, True, 0)
             return
         i += 1
     print("Hello from ki-serverdevelopment!")

@@ -8,13 +8,19 @@ authors = [
 ]
 requires-python = ">=3.15"
 dependencies = [
+    "fastapi>=0.115",
     "graphviz>=0.21",
     "graphviz-anywidget>=0.8.0",
     "npm>=0.1.1",
+    "psycopg[binary]>=3.2",
+    "pydantic>=2.10",
+    "sqlalchemy>=2.0",
+    "uvicorn[standard]>=0.34",
 ]
 
 [project.scripts]
 ki-serverentwicklung = "ki_serverentwicklung:main"
+ki-server = "ki_serverentwicklung.app:main"
 
 [build-system]
 requires = ["uv_build>=0.13.4,<0.14.0"]
@@ -22,7 +28,10 @@ build-backend = "uv_build"
 
 [dependency-groups]
 dev = [
+    "httpx>=0.28",
+    "httpx2",
     "pytest>=8",
+    "pytest-cov",
 ]
 lint = [
     "ruff>=0.17",

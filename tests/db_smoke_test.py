@@ -93,7 +93,7 @@ def main():
     print("=== Step 3 DB smoke test ===")
 
     # --- 1. bring the stack up ---
-    up = compose("up", "-d")
+    up = compose("up", "-d", "db")
     check(
         "compose up -d succeeds",
         up.returncode == 0,

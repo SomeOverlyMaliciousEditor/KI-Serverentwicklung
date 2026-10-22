@@ -20,8 +20,11 @@ wheels/
 
 # OS
 .DS_Store
-# Agent/local folders
-.agent/
+# Agent/local folders (keep reusable skill documentation in version control)
+.agent/*
+!.agent/skills/
+.agent/skills/*
+!.agent/skills/*.md
 .local/
 .pi/
 tmp/

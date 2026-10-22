@@ -55,6 +55,7 @@ TABLES = {
             ("ordered_at", "NOT NULL"),
             ("status", "NOT NULL"),
             ("total_cents", "NOT NULL"),
+            ("version", "NOT NULL DEFAULT 1"),
         ],
     ),
 }

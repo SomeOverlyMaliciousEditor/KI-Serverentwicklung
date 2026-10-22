@@ -29,7 +29,8 @@ CREATE TABLE orders (
     customer_id BIGINT NOT NULL REFERENCES customers (id) ON DELETE CASCADE,
     ordered_at  TIMESTAMPTZ NOT NULL DEFAULT now(),
     status      TEXT NOT NULL DEFAULT 'open',
-    total_cents INT NOT NULL DEFAULT 0
+    total_cents INT NOT NULL DEFAULT 0,
+    version     INT NOT NULL DEFAULT 1
 );
 
 CREATE INDEX idx_orders_customer_id ON orders (customer_id);
