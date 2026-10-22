@@ -21,10 +21,10 @@ These are the tasks to complete **before** implementing the Appserver features.
 - [x] Install / connect a **DB browser** (e.g. DBeaver, pgAdmin)
 
 ## 4. Keycloak (as Docker Container) — SKIPPED by decision
-- [x] ~~Run Keycloak as a Docker container — **caution with 26.8.0 as Hardened Image**~~ (skipped)
-- [x] ~~Create **1 realm**~~ (skipped)
-- [x] ~~Create **1 client** in that realm~~ (skipped)
-- [x] ~~Create at least **1 user** and **1 role**~~ (skipped)
+- [SKIPPED] Run Keycloak as a Docker container — **caution with 26.8.0 as Hardened Image**
+- [SKIPPED] Create **1 realm**
+- [SKIPPED] Create **1 client** in that realm
+- [SKIPPED] Create at least **1 user** and **1 role**
 
 ## 5. Project Infrastructure
 - [x] Create `pyproject.toml` including configuration for:
@@ -42,9 +42,9 @@ These are the tasks to complete **before** implementing the Appserver features.
 - [x] POST-Request with Pydantic validation
 - [x] PUT-Request with validation and lost-update prevention (e.g. ETag / versioning)
 - [x] DB access via **SQLAlchemy**
-- [x] ~~SKIP !!! Security via Dependency Injection~~
+- [SKIPPED] Security via Dependency Injection (explicitly out of scope)
 
-## 7. Testing (GET & POST)
+## 7. Testing (GET, POST & PUT concurrency)
 - [x] Choose an approach: `pytest` with FastAPI `TestClient`
 - [x] Test GET endpoints
 - [x] Test POST endpoints
