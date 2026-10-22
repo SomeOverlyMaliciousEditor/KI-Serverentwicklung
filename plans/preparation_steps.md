@@ -42,7 +42,7 @@ These are the tasks to complete **before** implementing the Appserver features.
 - [ ] POST-Request with Pydantic validation
 - [ ] PUT-Request with validation and lost-update prevention (e.g. ETag / versioning)
 - [ ] DB access via **SQLAlchemy**
-- [ ] SKIP !!! Security via Dependency Injection
+- [x] ~~SKIP !!! Security via Dependency Injection~~
 
 ## 7. Testing (GET & POST)
 - [ ] Choose an approach: Bruno / Postman / Thunder Client **or** `pytest` (integration tests suffice)
