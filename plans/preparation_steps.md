@@ -32,7 +32,7 @@ These are the tasks to complete **before** implementing the Appserver features.
   - [x] `ruff` (linter/formatter)
   - [x] a type checker: `ty` / `pyrefly` / `pyright`
 - [x] Set up `uv` environment
-- [ ] Pass `ruff` checks (lint and format checks currently report existing violations)
+- [x] Pass `ruff` checks (lint and format)
 - [x] Pass type checking (`ty check`)
 
 ## 6. Appserver Foundation (FastAPI)
