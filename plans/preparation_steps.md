@@ -36,15 +36,16 @@ These are the tasks to complete **before** implementing the Appserver features.
 - [x] Pass type checking (`ty check`)
 
 ## 6. Appserver Foundation (FastAPI)
-- [ ] REST via **FastAPI** with Dependency Injection
-- [ ] **Pydantic** for response models
-- [ ] GET-Requests: path or query parameters, incl. conditional GET-Requests
-- [ ] POST-Request with Pydantic validation
-- [ ] PUT-Request with validation and lost-update prevention (e.g. ETag / versioning)
-- [ ] DB access via **SQLAlchemy**
+- [x] REST via **FastAPI** with Dependency Injection
+- [x] **Pydantic** for response models
+- [x] GET-Requests: path or query parameters, incl. conditional GET-Requests
+- [x] POST-Request with Pydantic validation
+- [x] PUT-Request with validation and lost-update prevention (e.g. ETag / versioning)
+- [x] DB access via **SQLAlchemy**
 - [x] ~~SKIP !!! Security via Dependency Injection~~
 
 ## 7. Testing (GET & POST)
-- [ ] Choose an approach: Bruno / Postman / Thunder Client **or** `pytest` (integration tests suffice)
-- [ ] Test GET endpoints
-- [ ] Test POST endpoints
+- [x] Choose an approach: `pytest` with FastAPI `TestClient`
+- [x] Test GET endpoints
+- [x] Test POST endpoints
+- [x] Test PUT version checks and verify stale writes do not modify stored orders

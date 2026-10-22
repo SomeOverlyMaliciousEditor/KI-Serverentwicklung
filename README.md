@@ -66,7 +66,7 @@ Connection settings for both:
 | Host     | `127.0.0.1`            |
 | Port     | `5432`                 |
 | User     | `postgres`             |
-| Password | `postgres` (dev-only)   |
+| Password | `postgres` (dev-only)  |
 | Database | `appdb`                |
 
 Browse the four tables `users`, `profiles` (1:1 via `profiles.user_id
@@ -77,3 +77,26 @@ is generated with `uv run --no-project python scripts/generate_erd.py` into
 
 Alternative: DBeaver from Flathub (`flatpak install flathub io.dbeaver.DBeaverCommunity`)
 using the same connection settings.
+
+## Step 6 — FastAPI appserver
+
+Run the API directly on the host (uses `localhost:5432` by default):
+
+```sh
+uv run ki-server
+```
+
+Or run both services in Compose; the app uses the internal `db` hostname and
+waits for PostgreSQL health before starting:
+
+```sh
+podman compose up --build -d
+```
+
+The API is available at `http://127.0.0.1:8000`. Set `DATABASE_URL` to
+configure the database connection. For an existing database volume, the app
+performs a non-destructive `ALTER TABLE ... ADD COLUMN IF NOT EXISTS` migration
+for `orders.version` at startup; the initialization SQL also creates this
+column for new volumes.
+
+Run the API tests with `uv run pytest`.
