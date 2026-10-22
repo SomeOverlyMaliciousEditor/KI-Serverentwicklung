@@ -4,6 +4,37 @@ Agent orchestration and project planning for KI-gestützte Serverentwicklung.
 
 For agent metadata, see [AGENTS.md](AGENTS.md).
 
+## Development environment and checks
+
+Python 3.15 or newer and [uv](https://docs.astral.sh/uv/) are required. Create
+and sync the project environment, including the default `dev` and `lint`
+groups, with:
+
+```sh
+uv sync
+```
+
+Run the configured lint, formatting, and type checks with:
+
+```sh
+uv run ruff check .
+uv run ruff format --check .
+uv run ty check
+```
+
+Run the CLI smoke test independently of the project environment:
+
+```sh
+uv run --no-project python tests/smoke_test.py
+```
+
+The database smoke test is separate and starts/stops the project database. Run
+it only when Podman Compose is installed and host port `5432` is free:
+
+```sh
+uv run --no-project python tests/db_smoke_test.py
+```
+
 ## Step 3 — PostgreSQL (podman compose)
 
 Start the database:

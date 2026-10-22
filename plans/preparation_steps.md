@@ -27,13 +27,13 @@ These are the tasks to complete **before** implementing the Appserver features.
 - [x] ~~Create at least **1 user** and **1 role**~~ (skipped)
 
 ## 5. Project Infrastructure
-- [ ] Create `pyproject.toml` including configuration for:
-  - [ ] `uv` (package manager)
-  - [ ] `ruff` (linter/formatter)
-  - [ ] a type checker: `ty` / `pyrefly` / `pyright`
-- [ ] Set up `uv` environment
-- [ ] Set up `ruff` checks
-- [ ] Set up type checking
+- [x] Create `pyproject.toml` including configuration for:
+  - [x] `uv` (package manager)
+  - [x] `ruff` (linter/formatter)
+  - [x] a type checker: `ty` / `pyrefly` / `pyright`
+- [x] Set up `uv` environment
+- [ ] Pass `ruff` checks (lint and format checks currently report existing violations)
+- [x] Pass type checking (`ty check`)
 
 ## 6. Appserver Foundation (FastAPI)
 - [ ] REST via **FastAPI** with Dependency Injection
