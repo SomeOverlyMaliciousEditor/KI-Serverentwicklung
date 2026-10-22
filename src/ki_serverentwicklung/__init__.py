@@ -44,7 +44,14 @@ def load_skill(skill_id: str) -> str:
     return _read_file(path)
 
 
-def record_outcome(flag, argument, additional_args, success, exit_code, stdout=""):
+def record_outcome(
+    flag: str | None,
+    argument: str | None,
+    additional_args: list[str],
+    success: bool,
+    exit_code: int,
+    stdout: str = "",
+) -> None:
     timestamp = datetime.now().isoformat()
     log_path = (
         Path(__file__).resolve().parent.parent.parent
@@ -70,7 +77,7 @@ def record_outcome(flag, argument, additional_args, success, exit_code, stdout="
 def main() -> None:
     args = sys.argv[1:]
     i = 0
-    additional_args = []
+    additional_args: list[str] = []
     while i < len(args):
         if args[i] in {"--load-plan", "--load-skill"}:
             flag = args[i]
