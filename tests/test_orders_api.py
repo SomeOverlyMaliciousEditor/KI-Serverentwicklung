@@ -1,4 +1,5 @@
 from datetime import UTC, datetime
+from unittest.mock import MagicMock
 
 import pytest
 from fastapi.testclient import TestClient
@@ -6,6 +7,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 from sqlalchemy.pool import StaticPool
 
+import ki_serverentwicklung.app as app_module
 from ki_serverentwicklung.app import create_app
 from ki_serverentwicklung.database import get_session
 from ki_serverentwicklung.models import Base, Customer, Order
@@ -48,6 +50,23 @@ def client():
     engine.dispose()
 
 
+def test_startup_migration_adds_order_version_column(monkeypatch):
+    connection = MagicMock()
+    transaction = MagicMock()
+    transaction.__enter__.return_value = connection
+    transaction.__exit__.return_value = False
+    fake_engine = MagicMock()
+    fake_engine.dialect.name = "postgresql"
+    fake_engine.begin.return_value = transaction
+    monkeypatch.setattr(app_module, "engine", fake_engine)
+
+    with TestClient(create_app()) as _client:
+        pass
+
+    statement = connection.execute.call_args.args[0]
+    assert "ALTER TABLE orders ADD COLUMN IF NOT EXISTS version" in str(statement)
+
+
 def test_list_orders_and_missing_customer(client):
     test_client, _ = client
     response = test_client.get("/customers/1/orders")
@@ -66,6 +85,12 @@ def test_get_order_and_conditional_get(client):
     )
     assert conditional.status_code == 304
     assert conditional.content == b""
+    wildcard = test_client.get("/orders/10", headers={"If-None-Match": "*"})
+    assert wildcard.status_code == 304
+    weak_match = test_client.get(
+        "/orders/10", headers={"If-None-Match": 'W/"order-10-v1"'}
+    )
+    assert weak_match.status_code == 304
     assert test_client.get("/orders/999").status_code == 404
 
 
@@ -120,6 +145,50 @@ def test_update_requires_matching_etag_and_is_atomic(client):
         order = session.get(Order, 10)
         assert order is not None
         assert (order.status, order.total_cents, order.version) == ("shipped", 200, 2)
+
+
+@pytest.mark.parametrize(
+    "if_match",
+    [
+        'W/"order-10-v1"',
+        "*",
+        "malformed",
+        '"order-10-v1", malformed',
+    ],
+)
+def test_update_requires_a_strong_single_version_tag(client, if_match):
+    test_client, engine = client
+    response = test_client.put(
+        "/orders/10",
+        json={"status": "shipped", "total_cents": 200},
+        headers={"If-Match": if_match},
+    )
+    assert response.status_code == 412
+    with Session(engine) as session:
+        order = session.get(Order, 10)
+        assert order is not None
+        assert (order.status, order.total_cents, order.version) == ("open", 100, 1)
+
+
+def test_update_accepts_matching_strong_tag_from_list(client):
+    test_client, _ = client
+    response = test_client.put(
+        "/orders/10",
+        json={"status": "shipped", "total_cents": 200},
+        headers={"If-Match": '"order-10-v0", "order-10-v1"'},
+    )
+    assert response.status_code == 200
+    assert response.json()["version"] == 2
+
+
+def test_update_rejects_list_without_matching_strong_tag(client):
+    test_client, _ = client
+    response = test_client.put(
+        "/orders/10",
+        json={"status": "shipped", "total_cents": 200},
+        headers={"If-Match": '"order-10-v0", W/"order-10-v1"'},
+    )
+    assert response.status_code == 412
 
 
 def test_update_rejects_mismatched_order_id_and_invalid_body(client):

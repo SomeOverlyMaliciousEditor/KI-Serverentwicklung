@@ -12,6 +12,7 @@ from ki_serverentwicklung.schemas import OrderRead, OrderWrite
 router = APIRouter(tags=["orders"])
 SessionDependency = Annotated[Session, Depends(get_session)]
 _ETAG_PATTERN = re.compile(r'^"order-(\d+)-v(\d+)"$')
+_WEAK_ETAG_PATTERN = re.compile(r'^W/"order-(\d+)-v(\d+)"$')
 
 
 def _etag(order: Order) -> str:
@@ -22,14 +23,15 @@ def _required_if_match(value: str | None) -> list[tuple[int, int]]:
     if value is None:
         raise HTTPException(status_code=428, detail="If-Match header is required")
     candidates = [item.strip() for item in value.split(",")]
-    if "*" in candidates:
+    if "*" in candidates or not candidates:
         raise HTTPException(status_code=412, detail="If-Match does not match")
-    tags = [
-        match
-        for candidate in candidates
-        if not candidate.startswith("W/")
-        if (match := _ETAG_PATTERN.fullmatch(candidate)) is not None
-    ]
+    tags = []
+    for candidate in candidates:
+        match = _ETAG_PATTERN.fullmatch(candidate)
+        if match is not None:
+            tags.append(match)
+        elif _WEAK_ETAG_PATTERN.fullmatch(candidate) is None:
+            raise HTTPException(status_code=412, detail="If-Match does not match")
     if not tags:
         raise HTTPException(status_code=412, detail="If-Match does not match")
     return [(int(match.group(1)), int(match.group(2))) for match in tags]
